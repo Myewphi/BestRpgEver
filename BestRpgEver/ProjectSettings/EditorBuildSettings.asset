@@ -14,3 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/NorthRoad.unity
     guid: d5a12e42a3450ed4ca66677438f550c9
+  - enabled: 1
+    path: Assets/Scenes/kylietest.unity
+    guid: 50451b80bdd707a4884052710a7ff038
+  m_configObjects: {}
