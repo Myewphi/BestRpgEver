@@ -16,6 +16,7 @@ public class BasicMovement : MonoBehaviour {
 
     void Awake()
     {
+        //Keeps player from being deleted during scene changes
         DontDestroyOnLoad(gameObject);
     }
 
