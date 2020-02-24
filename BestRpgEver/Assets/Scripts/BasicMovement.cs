@@ -9,10 +9,11 @@ public class BasicMovement : MonoBehaviour {
     public bool cannotMoveBool;
 
     private int facing = 3; //1 = north, 2 = east, 3 = south, 4 = west
+
     [SerializeField]
-    private Sprite[] spriteState;
+    private Sprite[] directionSprites; //sprites for all directions the player faces
     [SerializeField]
-    private SpriteRenderer spriteRend;
+    private SpriteRenderer spriteRenderer;
 
     void Awake()
     {
@@ -22,142 +23,105 @@ public class BasicMovement : MonoBehaviour {
 
 	void Update () {
         //Move Up
-        if (Input.GetAxisRaw("Up") == 1 && !cannotMoveBool && !Physics2D.Raycast(transform.position, Vector2.up, 1))
+        if(Input.GetAxisRaw("Up") == 1)
         {
-            cannotMoveBool = true;
-            facing = 1; //north
-            spriteRend.sprite = ChangeDirection(1);
-            StartCoroutine("MoveTo", new Vector3(0f, 0.1f));
-            Debug.Log("north");
-        } 
-        else if (Input.GetAxisRaw("Up") == 1 && !cannotMoveBool && Physics2D.Raycast(transform.position, Vector2.up, 1).collider.tag == "Obstacle")
-        {
-            facing = 1; //north
-            spriteRend.sprite = ChangeDirection(1);
+            MovementHandler(Vector2.up, new Vector3(0f, 0.1f), 1);
         }
-        else if(Input.GetAxisRaw("Up") == 1 && !cannotMoveBool && Physics2D.Raycast(transform.position, Vector2.up, 1).collider.tag == "Door")
-        {
-            facing = 1; //north
-            spriteRend.sprite = ChangeDirection(1);
-            SceneManager.LoadScene(Physics2D.Raycast(transform.position, Vector2.up, 1).collider.gameObject.GetComponent<DoorTeleport>().targetScene);
-            transform.position = Physics2D.Raycast(transform.position, Vector2.up, 1).collider.gameObject.GetComponent<DoorTeleport>().telPos;
-        }
-        else if (Input.GetAxisRaw("Up") == 1 && !cannotMoveBool)
-        {
-            facing = 1; //north
-            spriteRend.sprite = ChangeDirection(1);
-        }
-
-        //Move Down
-        if (Input.GetAxisRaw("Down") == 1 && !cannotMoveBool && !Physics2D.Raycast(transform.position, Vector2.down, 1))
-        {
-            cannotMoveBool = true;
-            facing = 3; //south
-            spriteRend.sprite = ChangeDirection(3);
-            StartCoroutine("MoveTo", new Vector3(0f, -0.1f));
-        }
-        else if (Input.GetAxisRaw("Down") == 1 && !cannotMoveBool && Physics2D.Raycast(transform.position, Vector2.down, 1).collider.tag == "Obstacle")
-        {
-            facing = 3; //south
-            spriteRend.sprite = ChangeDirection(3);
-        }
-        else if (Input.GetAxisRaw("Down") == 1 && !cannotMoveBool && Physics2D.Raycast(transform.position, Vector2.down, 1).collider.tag == "Door")
-        {
-            facing = 3; //south
-            spriteRend.sprite = ChangeDirection(3);
-            SceneManager.LoadScene(Physics2D.Raycast(transform.position, Vector2.down, 1).collider.gameObject.GetComponent<DoorTeleport>().targetScene);
-            transform.position = Physics2D.Raycast(transform.position, Vector2.down, 1).collider.gameObject.GetComponent<DoorTeleport>().telPos;
-        }
-        else if(Input.GetAxisRaw("Down") == 1 && !cannotMoveBool)
-        {
-            facing = 3; //south
-            spriteRend.sprite = ChangeDirection(3);
-        }
-
-        //Move Left
-        if (Input.GetAxisRaw("Left") == 1 && !cannotMoveBool && !Physics2D.Raycast(transform.position, Vector2.left, 1))
-        {
-            cannotMoveBool = true;
-            facing = 4; //west
-            spriteRend.sprite = ChangeDirection(4);
-            StartCoroutine("MoveTo", new Vector3(-0.1f, 0f));
-        }
-        else if (Input.GetAxisRaw("Left") == 1 && !cannotMoveBool && Physics2D.Raycast(transform.position, Vector2.left, 1).collider.tag == "Obstacle")
-        {
-            facing = 4; //west
-            spriteRend.sprite = ChangeDirection(4);
-        }
-        else if (Input.GetAxisRaw("Left") == 1 && !cannotMoveBool && Physics2D.Raycast(transform.position, Vector2.left, 1).collider.tag == "Door")
-        {
-            facing = 4; //west
-            spriteRend.sprite = ChangeDirection(4);
-            SceneManager.LoadScene(Physics2D.Raycast(transform.position, Vector2.left, 1).collider.gameObject.GetComponent<DoorTeleport>().targetScene);
-            transform.position = Physics2D.Raycast(transform.position, Vector2.left, 1).collider.gameObject.GetComponent<DoorTeleport>().telPos;
-        }
-        else if(Input.GetAxisRaw("Left") == 1 && !cannotMoveBool)
-        {
-            facing = 4; //west
-            spriteRend.sprite = ChangeDirection(4);
-        }
-
         //Move Right
-        if (Input.GetAxisRaw("Right") == 1 && !cannotMoveBool && !Physics2D.Raycast(transform.position, Vector2.right, 1))
+        if (Input.GetAxisRaw("Right") == 1)
         {
-            cannotMoveBool = true;
-            facing = 2; //east
-            spriteRend.sprite = ChangeDirection(2);
-            StartCoroutine("MoveTo", new Vector3(0.1f, 0f));
+            MovementHandler(Vector2.right, new Vector3(0.1f, 0f), 2);
         }
-        else if (Input.GetAxisRaw("Right") == 1 && !cannotMoveBool && Physics2D.Raycast(transform.position, Vector2.right, 1).collider.tag == "Obstacle")
+        //Move Down
+        if (Input.GetAxisRaw("Down") == 1)
         {
-            facing = 2; //east
-            spriteRend.sprite = ChangeDirection(2);
+            MovementHandler(Vector2.down, new Vector3(0f, -0.1f), 3);
         }
-        else if (Input.GetAxisRaw("Right") == 1 && !cannotMoveBool && Physics2D.Raycast(transform.position, Vector2.right, 1).collider.tag == "Door")
+        //Move Left
+        if (Input.GetAxisRaw("Left") == 1)
         {
-            facing = 2; //east
-            spriteRend.sprite = ChangeDirection(2);
-            SceneManager.LoadScene(Physics2D.Raycast(transform.position, Vector2.right, 1).collider.gameObject.GetComponent<DoorTeleport>().targetScene);
-            transform.position = Physics2D.Raycast(transform.position, Vector2.right, 1).collider.gameObject.GetComponent<DoorTeleport>().telPos;
-        }
-        else if(Input.GetAxisRaw("Right") == 2)
-        {
-            facing = 2; //east
-            spriteRend.sprite = ChangeDirection(1);
+            MovementHandler(Vector2.left, new Vector3(-0.1f, 0f), 4);
         }
 
         //Interact
-        if(Input.GetButtonDown("Interact") && !cannotMoveBool)
+        if (Input.GetButtonDown("Interact") && !cannotMoveBool)
         {
-            if(facing == 1 && Physics2D.Raycast(transform.position, Vector2.up, 1).collider.tag == "Interactable")
+            //Interact North
+            if(facing == 1)
             {
-                Physics2D.Raycast(transform.position, Vector2.up, 1).collider.GetComponent<InteractBase>().player = gameObject;
-                Physics2D.Raycast(transform.position, Vector2.up, 1).collider.GetComponent<InteractBase>().Interact();
+                InteractionHandler(Vector2.up);
             }
-            if (facing == 2 && Physics2D.Raycast(transform.position, Vector2.right, 1).collider.tag == "Interactable")
+            //Interact East
+            if (facing == 2)
             {
-                Physics2D.Raycast(transform.position, Vector2.right, 1).collider.GetComponent<InteractBase>().player = gameObject;
-                Physics2D.Raycast(transform.position, Vector2.right, 1).collider.GetComponent<InteractBase>().Interact();
+                InteractionHandler(Vector2.right);
             }
-            if (facing == 3 && Physics2D.Raycast(transform.position, Vector2.down, 1).collider.tag == "Interactable")
+            //Interact South
+            if (facing == 3)
             {
-                Physics2D.Raycast(transform.position, Vector2.down, 1).collider.GetComponent<InteractBase>().player = gameObject;
-                Physics2D.Raycast(transform.position, Vector2.down, 1).collider.GetComponent<InteractBase>().Interact();
+                InteractionHandler(Vector2.down);
             }
-            if (facing == 4 && Physics2D.Raycast(transform.position, Vector2.left, 1).collider.tag == "Interactable")
+            //Interact West
+            if (facing == 4)
             {
-                Physics2D.Raycast(transform.position, Vector2.left, 1).collider.GetComponent<InteractBase>().player = gameObject;
-                Physics2D.Raycast(transform.position, Vector2.left, 1).collider.GetComponent<InteractBase>().Interact();
+                InteractionHandler(Vector2.left);
             }
+        }
+    }
+
+    private void MovementHandler(Vector2 directionVector2, Vector3 directionVector3, int directionFacing)
+    {
+        //Changes direction before movement
+        facing = directionFacing;
+        spriteRenderer.sprite = ChangeDirection(directionFacing);
+
+        //Checks where we are going before movement
+        //Normal Ground
+        if (!cannotMoveBool && !Physics2D.Raycast(transform.position, directionVector2, 1))
+        {
+            cannotMoveBool = true;
+            StartCoroutine("MoveCoroutine", directionVector3);
+        }
+        //Obstacles
+        else if (!cannotMoveBool && Physics2D.Raycast(transform.position, directionVector2, 1).collider.tag == "Obstacle")
+        {
+            //Nothing is done when an obstacle is hit for now
+        }
+        //Doors
+        else if (!cannotMoveBool && Physics2D.Raycast(transform.position, directionVector2, 1).collider.tag == "Door")
+        {
+            SceneManager.LoadScene(Physics2D.Raycast(transform.position, directionVector2, 1).collider.gameObject.GetComponent<DoorTeleport>().targetScene);
+            transform.position = Physics2D.Raycast(transform.position, directionVector2, 1).collider.gameObject.GetComponent<DoorTeleport>().telPos;
+        }
+        //Combat Areas
+        else if (!cannotMoveBool && Physics2D.Raycast(transform.position, directionVector2, 1).collider.tag == "CombatArea")
+        {
+            cannotMoveBool = true;
+            StartCoroutine("MoveCoroutine", directionVector3);
+        }
+    }
+
+    private void InteractionHandler(Vector2 directionVector2)
+    {
+        if(Physics2D.Raycast(transform.position, directionVector2, 1).collider.tag == "Interactable")
+        {
+            //This is the raycast
+            RaycastHit2D raycast = Physics2D.Raycast(transform.position, directionVector2, 1);
+            //grabs InteractBase script from object hit by raycast
+            InteractBase interactScript = raycast.collider.GetComponent<InteractBase>();
+            //Links interact script to the player
+            interactScript.player = gameObject;
+            //Runs interact scripts Interact() function
+            interactScript.Interact();
         }
     }
 
     Sprite ChangeDirection(int i)
     {
-        return spriteState[i - 1];
+        return directionSprites[i - 1];
     }
 
-    IEnumerator MoveTo (Vector3 direction)
+    IEnumerator MoveCoroutine (Vector3 direction)
     {
         //for smooth movement between tiles
         for(int i = 0; i != 10; i++)

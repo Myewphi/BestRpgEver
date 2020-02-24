@@ -23,6 +23,9 @@ TextureImporter:
   - first:
       213: 21300012
     second: Purple
+  - first:
+      213: 2944365851237661629
+    second: CombatGrass
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -301,10 +304,31 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: CombatGrass
+      rect:
+        serializedVersion: 2
+        x: 59
+        y: 47
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dbbbfcb442d7cd820800000000000000
+      internalID: 2944365851237661629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 4f166443a2dc9eb46be2388b5d9cb324
     internalID: 0
     vertices: []
     indices: 
